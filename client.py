@@ -4,6 +4,7 @@ import asyncio
 import argparse
 from fastmcp import Client
 import sys
+import json
 
 client = Client("http://localhost:8000/mcp")
 
@@ -12,7 +13,7 @@ async def call_tool(tool_name: str):
     async with client:
         tool_name = f"get_{tool_name}"
         result = await client.call_tool(tool_name)
-        print(result)
+        print(json.dumps(result.structured_content))
 
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description="t5gmcp cli tool")
@@ -28,6 +29,7 @@ if args.data in (
     "escalations",
     "issues",
     "all_case_data",
+    "combined_data",
 ):
     asyncio.run(call_tool(args.data))
 else:
