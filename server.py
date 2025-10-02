@@ -57,6 +57,19 @@ def get_issues() -> dict:
     issues = urllib3.request("GET", f"{dashboard_api}/issues")
     return json.loads(issues.data)
 
+@mcp.tool
+def get_full_case_data() -> dict:
+    """Retrieve the merged case data from the dashboard"""
+    cards = urllib3.request("GET", f"{dashboard_api}/cards")
+    cards = json.loads(cards.data)
+    cases = {}
+    for card in cards:
+        logging.warning(card)
+        cases[cards[card]["case_number"]] = cards[card]
+        cases[cards[card]["case_number"]]['jira_card'] = card
+    
+    return cases
+
 
 if __name__ == "__main__":
     mcp.run()
